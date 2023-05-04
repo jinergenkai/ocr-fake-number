@@ -1,27 +1,22 @@
 
 import tkinter as tk
 from PIL import ImageTk, Image
-import os
 import pytesseract
 import re
 
 # pytesseract.pytesseract.tesseract_cmd = 'C:\Program Files\Tesseract-OCR\\tesseract.exe'
 from src.getwindow import *
+from src.config import *
 
-# hide menubar
-# root.overrideredirect(True)
-image_path = "Notepad.png"
-
-# canvas vs photo phai la bien toan cuc
 canvas = None
 photo = None
 
 def update_image():
     global image_path, canvas, photo
 
-    if GetImage("Notepad") == False:
+    if GetImage(image_name) == False:
         return
-    img = Image.open(image_path)
+    img = Image.open(image_name + ".bmp")
     # Chuyển đổi hình ảnh thành đối tượng PhotoImage của tkinter
     photo = ImageTk.PhotoImage(img)
 
@@ -42,12 +37,17 @@ def update_image():
     canvas.create_image(0, 0, anchor='nw', image=photo)
 
     
-    canvas.after(10, update_image)
+    canvas.after(delay, update_image)
 
 
 root = tk.Tk()
-canvas = tk.Canvas(root, width=1000, height=1000)
+canvas = tk.Canvas(root, width=width, height=height)
 canvas.pack()
 update_image()
+
+root.wm_attributes("-topmost", onTop)
+root.overrideredirect(hideMenuBar)
+print (width)
+
 root.mainloop()
 

@@ -3,11 +3,11 @@ import win32ui
 from ctypes import windll
 from PIL import ImageTk, Image
 
-async def GetImage(name):
+def GetImage(name):
     hwnd = win32gui.FindWindow(name, None)
     # print("getimage")
     if hwnd != 0:
-        capture(hwnd, f"{name}.png")
+        capture(hwnd, f"{name}.bmp")
         return True
     return False
 
@@ -26,7 +26,7 @@ def capture(hwnd, filename, size=(400, 400)):
 
     saveDC.SelectObject(saveBitMap)
 
-    result = windll.user32.PrintWindow(hwnd, saveDC.GetSafeHdc(), 3)
+    result = windll.user32.PrintWindow(hwnd, saveDC.GetSafeHdc(), 0)
 
     bmpinfo = saveBitMap.GetInfo()
     bmpstr = saveBitMap.GetBitmapBits(True)
