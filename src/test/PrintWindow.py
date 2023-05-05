@@ -44,7 +44,7 @@ def callback(hwnd, lParam):
         cls = win32gui.GetClassName(hwnd)
         name = re.sub(r'[\\|/|:|?|.|"|<|>|\|]', '', title) #ファイル名に使えない文字を除去
 
-        print(f"title:{title}  class:{cls}")
+        # print(f"title:{title}  class:{cls}")
         if title != "":
             capture(hwnd, f"{cls}.png")
 
@@ -63,8 +63,7 @@ def capture(hwnd, filename):
 
     saveDC.SelectObject(saveBitMap)
 
-    result = windll.user32.PrintWindow(hwnd, saveDC.GetSafeHdc(), 0)
-    print(result)
+    result = windll.user32.PrintWindow(hwnd, saveDC.GetSafeHdc(), 3)
 
     bmpinfo = saveBitMap.GetInfo()
     bmpstr = saveBitMap.GetBitmapBits(True)
@@ -79,7 +78,7 @@ def capture(hwnd, filename):
     win32gui.ReleaseDC(hwnd, hwndDC)
 
     if result == 1:
-        print(f"save {filename}")
+        print(f"{filename}")
         im.save(filename)
     else:
         print("PrintWindow failed")

@@ -2,20 +2,18 @@ from win32 import win32gui
 import win32ui
 from ctypes import windll
 from PIL import ImageTk, Image
+from src.config import image_name, width, height
 
-def GetImage(name):
-    hwnd = win32gui.FindWindow(name, None)
-    # print("getimage")
+
+hwnd = win32gui.FindWindow(image_name, None)
+
+def GetImage(image_name):
     if hwnd != 0:
-        capture(hwnd, f"{name}.bmp")
-        return True
+        return capture(hwnd, f"{image_name}.bmp", (width, height))
     return False
 
 
 def capture(hwnd, filename, size=(400, 400)):
-    # left, top, right, bot = win32gui.GetWindowRect(hwnd)
-    # w = right - left
-    # h = bot - top
 
     hwndDC = win32gui.GetWindowDC(hwnd)
     mfcDC = win32ui.CreateDCFromHandle(hwndDC)
@@ -35,14 +33,8 @@ def capture(hwnd, filename, size=(400, 400)):
         (bmpinfo['bmWidth'], bmpinfo['bmHeight']),
         bmpstr, 'raw', 'BGRX', 0, 1)
 
-    win32gui.DeleteObject(saveBitMap.GetHandle())
-    saveDC.DeleteDC()
-    mfcDC.DeleteDC()
-    win32gui.ReleaseDC(hwnd, hwndDC)
-
     if result == 1:
-        # print(f"save {filename}")
         im.save(filename)
+        return True
     else:
-        print("PrintWindow failed")
-    return im
+        return False

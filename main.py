@@ -11,29 +11,31 @@ from src.config import *
 canvas = None
 photo = None
 
+
+def getNumbers(text):
+    numbers = ''
+    for char in text:
+        if char.isdigit():
+            numbers += char 
+    return numbers if numbers != '' else None
+
 def update_image():
     global image_path, canvas, photo
 
     if GetImage(image_name) == False:
         return
     img = Image.open(image_name + ".bmp")
-    # Chuyển đổi hình ảnh thành đối tượng PhotoImage của tkinter
     photo = ImageTk.PhotoImage(img)
 
     custom_config = r'tessedit_char_whitelist=0123456789'
     text = pytesseract.image_to_string(img, config=custom_config)
-    numbers = ''
-    for char in text:
-        if char.isdigit():
-            numbers += char
-    text = numbers
+    text = getNumbers(text)
 
-    # canvas.delete("all")
+    canvas.delete("all")
     
     # font = ('Arial', 50)
     # canvas.create_text(100, 100, text=text, font=font)
 
-    canvas.delete("all")
     canvas.create_image(0, 0, anchor='nw', image=photo)
 
     
@@ -47,7 +49,6 @@ update_image()
 
 root.wm_attributes("-topmost", onTop)
 root.overrideredirect(hideMenuBar)
-print (width)
 
 root.mainloop()
 
